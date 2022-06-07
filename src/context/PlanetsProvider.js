@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import PlanetsContext from './PlanetsContext';
+import fetchPlanets from '../API';
 
 function PlanetsProvider({ children }) {
-  const [value, setValue] = useState('Olá');
+  const [planets, setPlanets] = useState([]);
+
+  const planetsArray = async () => {
+    const result = await fetchPlanets();
+    setPlanets(result);
+  };
 
   const context = {
-    value,
-    setValue,
+    planets,
+    planetsArray,
   };
 
   return (
@@ -17,7 +24,7 @@ function PlanetsProvider({ children }) {
 }
 
 PlanetsProvider.propTypes = {
-  children: PropTypes.arrayOf.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 export default PlanetsProvider;

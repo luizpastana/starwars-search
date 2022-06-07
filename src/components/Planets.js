@@ -1,12 +1,23 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
 
 function Planets() {
-  const { value } = useContext(PlanetsContext);
+  const { planets, planetsArray } = useContext(PlanetsContext);
+
+  useEffect(() => {
+    const getPlanets = async () => {
+      planetsArray();
+    };
+    getPlanets();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <p>Componente Planets</p>
-      {value}
+      {planets.map((planet) => (
+        <p key={ planet.name }>{planet.name}</p>
+      ))}
     </>
   );
 }
