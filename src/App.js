@@ -1,7 +1,9 @@
 import React from 'react';
-import './App.css';
+import fetchPlanets from './API';
 
 function App() {
+  const plants = fetchPlanets();
+  console.log(plants);
   return (
     <span>opa</span>
   );
