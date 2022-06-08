@@ -12,6 +12,9 @@ function Planets() {
   const handleChange = ({ target }) => {
     const { value } = target;
     setNameInput(value.toLowerCase());
+    setFilteredPlanets(planets
+      .filter((planet) => planet.name
+        .toLowerCase().includes(value.toLowerCase())));
   };
 
   useEffect(() => {
@@ -21,11 +24,6 @@ function Planets() {
     getPlanets();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    setFilteredPlanets(planets
-      .filter((planet) => planet.name.toLowerCase().includes(nameInput)));
-  }, [nameInput]);
 
   return (
     <>
