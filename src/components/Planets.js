@@ -1,8 +1,18 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
 
 function Planets() {
-  const { planets, planetsArray, labels } = useContext(PlanetsContext);
+  const {
+    planets, planetsArray, labels,
+    filteredPlanets, setFilteredPlanets,
+  } = useContext(PlanetsContext);
+
+  const [nameInput, setNameInput] = useState({ name: '' });
+
+  const handleChange = ({ target }) => {
+    const { value } = target;
+    setNameInput(value.toLowerCase());
+  };
 
   useEffect(() => {
     const getPlanets = async () => {
@@ -12,32 +22,47 @@ function Planets() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    setFilteredPlanets(planets
+      .filter((planet) => planet.name.toLowerCase().includes(nameInput)));
+  }, [nameInput]);
+
   return (
-    <table>
-      <tr>
-        {labels.filter((key) => key !== 'residents')
-          .map((planet) => (
-            <th key={ planet }>{planet}</th>
-          ))}
-      </tr>
-      {planets.map((planet) => (
-        <tr key={ planet.name }>
-          <td>{planet.name}</td>
-          <td>{planet.rotation_period}</td>
-          <td>{planet.orbital_period}</td>
-          <td>{planet.diameter}</td>
-          <td>{planet.climate}</td>
-          <td>{planet.gravity}</td>
-          <td>{planet.terrain}</td>
-          <td>{planet.surface_water}</td>
-          <td>{planet.population}</td>
-          <td>{planet.films}</td>
-          <td>{planet.created}</td>
-          <td>{planet.edited}</td>
-          <td>{planet.url}</td>
+    <>
+      <input
+        type="text"
+        data-testid="name-filter"
+        placeholder="nome do planeta"
+        name="name"
+        value={ nameInput.name }
+        onChange={ handleChange }
+      />
+      <table>
+        <tr>
+          {labels.filter((key) => key !== 'residents')
+            .map((planet) => (
+              <th key={ planet }>{planet}</th>
+            ))}
         </tr>
-      ))}
-    </table>
+        {filteredPlanets.map((planet) => (
+          <tr key={ planet.name }>
+            <td>{planet.name}</td>
+            <td>{planet.rotation_period}</td>
+            <td>{planet.orbital_period}</td>
+            <td>{planet.diameter}</td>
+            <td>{planet.climate}</td>
+            <td>{planet.gravity}</td>
+            <td>{planet.terrain}</td>
+            <td>{planet.surface_water}</td>
+            <td>{planet.population}</td>
+            <td>{planet.films}</td>
+            <td>{planet.created}</td>
+            <td>{planet.edited}</td>
+            <td>{planet.url}</td>
+          </tr>
+        ))}
+      </table>
+    </>
   );
 }
 

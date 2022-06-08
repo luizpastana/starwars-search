@@ -6,11 +6,13 @@ import fetchPlanets from '../API';
 function PlanetsProvider({ children }) {
   const [planets, setPlanets] = useState([]);
   const [labels, setLabels] = useState([]);
+  const [filteredPlanets, setFilteredPlanets] = useState([]);
 
   const planetsArray = async () => {
     const result = await fetchPlanets();
     const label = Object.keys(result[0]);
     setPlanets(result);
+    setFilteredPlanets(result);
     setLabels(label);
   };
 
@@ -18,6 +20,8 @@ function PlanetsProvider({ children }) {
     planets,
     labels,
     planetsArray,
+    filteredPlanets,
+    setFilteredPlanets,
   };
 
   return (
