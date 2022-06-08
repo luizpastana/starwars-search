@@ -5,14 +5,18 @@ import fetchPlanets from '../API';
 
 function PlanetsProvider({ children }) {
   const [planets, setPlanets] = useState([]);
+  const [labels, setLabels] = useState([]);
 
   const planetsArray = async () => {
     const result = await fetchPlanets();
+    const label = Object.keys(result[0]);
     setPlanets(result);
+    setLabels(label);
   };
 
   const context = {
     planets,
+    labels,
     planetsArray,
   };
 
