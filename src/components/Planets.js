@@ -9,10 +9,15 @@ function Planets() {
 
   const [nameInput, setNameInput] = useState({ name: '' });
 
+  const nameAndNumericFilter = (planetHempObj) => {
+    // planetHempObj.reduce(() => {
+    setFilteredPlanets(planetHempObj);
+  };
+
   const handleChange = ({ target }) => {
     const { value } = target;
     setNameInput(value.toLowerCase());
-    setFilteredPlanets(planets
+    nameAndNumericFilter(planets
       .filter((planet) => planet.name
         .toLowerCase().includes(value.toLowerCase())));
   };
@@ -35,6 +40,30 @@ function Planets() {
         value={ nameInput.name }
         onChange={ handleChange }
       />
+      <form>
+        <label htmlFor="coluns">
+          Coluns
+          <select name="coluns" id="coluns" data-testid="column-filter">
+            <option value="population">population</option>
+            <option value="orbital_period">orbital_period</option>
+            <option value="diameter">diameter</option>
+            <option value="rotation_period">rotation_period</option>
+            <option value="surface_water">surface_water</option>
+          </select>
+        </label>
+        <label htmlFor="comparison">
+          Comparison
+          <select name="comparison" id="comparison" data-testid="comparison-filter">
+            <option value="population">maior que</option>
+            <option value="orbital_period">menor que</option>
+            <option value="diameter">igual a</option>
+          </select>
+        </label>
+        <input
+          type="number"
+          data-testid="value-filter"
+        />
+      </form>
       <table>
         <tr>
           {labels.filter((key) => key !== 'residents')
