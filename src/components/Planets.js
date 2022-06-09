@@ -10,9 +10,9 @@ function Planets() {
 
   const [nameInput, setNameInput] = useState({ name: '' });
 
-  const [column, setColumn] = useState('');
-  const [comparison, setComparison] = useState('');
-  const [value, setValue] = useState('');
+  const [column, setColumn] = useState('population');
+  const [comparison, setComparison] = useState('maior que');
+  const [value, setValue] = useState(0);
 
   const nameAndNumericFilter = (planetHempObj) => {
     // planetHempObj.reduce(() => {
@@ -54,7 +54,7 @@ function Planets() {
         case 'menor que':
           return planet[filterObj.column] < Number(filterObj.value);
         case 'igual a':
-          return planet[filterObj.column] === Number(filterObj.value);
+          return planet[filterObj.column] === filterObj.value;
         default:
           return planet;
         }
@@ -111,6 +111,7 @@ function Planets() {
         />
         <button
           type="button"
+          data-testid="button-filter"
           // funcao que monta o obj. filter
           onClick={ makeFilterObj }
         >
