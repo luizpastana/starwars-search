@@ -5,7 +5,7 @@ function Planets() {
   const {
     planets, planetsArray, labels,
     filteredPlanets, setFilteredPlanets,
-    setNumericFiltersObj, numericFiltersObj,
+    setNumericFiltersObj,
   } = useContext(PlanetsContext);
 
   const [nameInput, setNameInput] = useState({ name: '' });
@@ -35,7 +35,7 @@ function Planets() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const makeFilterobj = () => {
+  const makeFilterObj = () => {
     const filterObj = {
       column,
       comparison,
@@ -45,6 +45,21 @@ function Planets() {
     setNumericFiltersObj({
       filterByNumericValues: filterObj,
     });
+
+    const filteredByComparison = planets
+      .filter((planet) => {
+        switch (filterObj.comparison) {
+        case 'maior que':
+          return planet[filterObj.column] > Number(filterObj.value);
+        case 'menor que':
+          return planet[filterObj.column] < Number(filterObj.value);
+        case 'igual a':
+          return planet[filterObj.column] === Number(filterObj.value);
+        default:
+          return planet;
+        }
+      });
+    setFilteredPlanets(filteredByComparison);
   };
 
   return (
@@ -97,7 +112,7 @@ function Planets() {
         <button
           type="button"
           // funcao que monta o obj. filter
-          onClick={ makeFilterobj }
+          onClick={ makeFilterObj }
         >
           Filtrar
         </button>
