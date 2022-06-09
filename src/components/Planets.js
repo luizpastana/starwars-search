@@ -5,9 +5,14 @@ function Planets() {
   const {
     planets, planetsArray, labels,
     filteredPlanets, setFilteredPlanets,
+    setNumericFiltersObj, numericFiltersObj,
   } = useContext(PlanetsContext);
 
   const [nameInput, setNameInput] = useState({ name: '' });
+
+  const [column, setColumn] = useState('');
+  const [comparison, setComparison] = useState('');
+  const [value, setValue] = useState('');
 
   const nameAndNumericFilter = (planetHempObj) => {
     // planetHempObj.reduce(() => {
@@ -15,11 +20,11 @@ function Planets() {
   };
 
   const handleChange = ({ target }) => {
-    const { value } = target;
-    setNameInput(value.toLowerCase());
+    const { value: planetName } = target;
+    setNameInput(planetName.toLowerCase());
     nameAndNumericFilter(planets
       .filter((planet) => planet.name
-        .toLowerCase().includes(value.toLowerCase())));
+        .toLowerCase().includes(planetName.toLowerCase())));
   };
 
   useEffect(() => {
@@ -29,6 +34,18 @@ function Planets() {
     getPlanets();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const makeFilterobj = () => {
+    const filterObj = {
+      column,
+      comparison,
+      value,
+    };
+    console.log(filterObj);
+    setNumericFiltersObj({
+      filterByNumericValues: filterObj,
+    });
+  };
 
   return (
     <>
@@ -41,9 +58,15 @@ function Planets() {
         onChange={ handleChange }
       />
       <form>
-        <label htmlFor="coluns">
+        <label htmlFor="column">
           Coluns
-          <select name="coluns" id="coluns" data-testid="column-filter">
+          <select
+            name="column"
+            id="coluns"
+            data-testid="column-filter"
+            value={ column }
+            onChange={ (e) => setColumn(e.target.value) }
+          >
             <option value="population">population</option>
             <option value="orbital_period">orbital_period</option>
             <option value="diameter">diameter</option>
@@ -53,16 +76,31 @@ function Planets() {
         </label>
         <label htmlFor="comparison">
           Comparison
-          <select name="comparison" id="comparison" data-testid="comparison-filter">
-            <option value="population">maior que</option>
-            <option value="orbital_period">menor que</option>
-            <option value="diameter">igual a</option>
+          <select
+            name="comparison"
+            id="comparison"
+            data-testid="comparison-filter"
+            value={ comparison }
+            onChange={ (e) => setComparison(e.target.value) }
+          >
+            <option value="maior que">maior que</option>
+            <option value="menor que">menor que</option>
+            <option value="igual a">igual a</option>
           </select>
         </label>
         <input
           type="number"
           data-testid="value-filter"
+          value={ value }
+          onChange={ (e) => setValue(e.target.value) }
         />
+        <button
+          type="button"
+          // funcao que monta o obj. filter
+          onClick={ makeFilterobj }
+        >
+          Filtrar
+        </button>
       </form>
       <table>
         <tr>

@@ -7,6 +7,15 @@ function PlanetsProvider({ children }) {
   const [planets, setPlanets] = useState([]);
   const [labels, setLabels] = useState([]);
   const [filteredPlanets, setFilteredPlanets] = useState([]);
+  const [numericFiltersObj, setNumericFiltersObj] = useState({
+    filterByNumericValues: [
+      {
+        column: 'population',
+        comparison: 'maior que',
+        value: '100000',
+      },
+    ],
+  });
 
   const planetsArray = async () => {
     const result = await fetchPlanets();
@@ -22,6 +31,8 @@ function PlanetsProvider({ children }) {
     planetsArray,
     filteredPlanets,
     setFilteredPlanets,
+    numericFiltersObj,
+    setNumericFiltersObj,
   };
 
   return (
