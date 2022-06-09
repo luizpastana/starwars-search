@@ -46,7 +46,7 @@ function Planets() {
       filterByNumericValues: filterObj,
     });
 
-    const filteredByComparison = planets
+    const filteredByComparison = filteredPlanets
       .filter((planet) => {
         switch (filterObj.comparison) {
         case 'maior que':
