@@ -5,7 +5,7 @@ function Planets() {
   const {
     planets, planetsArray, labels,
     filteredPlanets, setFilteredPlanets,
-    setNumericFiltersObj,
+    setNumericFiltersObj, numericFiltersObj,
   } = useContext(PlanetsContext);
 
   const [nameInput, setNameInput] = useState({ name: '' });
@@ -43,7 +43,7 @@ function Planets() {
     };
     console.log(filterObj);
     setNumericFiltersObj({
-      filterByNumericValues: filterObj,
+      filterByNumericValues: [...numericFiltersObj.filterByNumericValues, filterObj],
     });
 
     const filteredByComparison = filteredPlanets
@@ -72,6 +72,9 @@ function Planets() {
         value={ nameInput.name }
         onChange={ handleChange }
       />
+      {numericFiltersObj.filterByNumericValues.map((item) => (
+        <p key={ item.column }>{`${item.column} ${item.comparison} ${item.value}`}</p>
+      ))}
       <form>
         <label htmlFor="column">
           Coluns

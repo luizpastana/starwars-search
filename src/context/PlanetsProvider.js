@@ -10,9 +10,9 @@ function PlanetsProvider({ children }) {
   const [numericFiltersObj, setNumericFiltersObj] = useState({
     filterByNumericValues: [
       {
-        column: 'population',
-        comparison: 'maior que',
-        value: 0,
+        column: '',
+        comparison: '',
+        value: '',
       },
     ],
   });
