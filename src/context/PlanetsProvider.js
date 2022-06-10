@@ -17,6 +17,10 @@ function PlanetsProvider({ children }) {
     ],
   });
 
+  const [labelsColuns, unsetLabelsColuns] = useState([
+    'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
+  ]);
+
   const planetsArray = async () => {
     const result = await fetchPlanets();
     const label = Object.keys(result[0]);
@@ -33,6 +37,8 @@ function PlanetsProvider({ children }) {
     setFilteredPlanets,
     numericFiltersObj,
     setNumericFiltersObj,
+    labelsColuns,
+    unsetLabelsColuns,
   };
 
   return (

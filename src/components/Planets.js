@@ -6,6 +6,7 @@ function Planets() {
     planets, planetsArray, labels,
     filteredPlanets, setFilteredPlanets,
     setNumericFiltersObj, numericFiltersObj,
+    labelsColuns, unsetLabelsColuns,
   } = useContext(PlanetsContext);
 
   const [nameInput, setNameInput] = useState({ name: '' });
@@ -15,7 +16,6 @@ function Planets() {
   const [value, setValue] = useState(0);
 
   const nameAndNumericFilter = (planetHempObj) => {
-    // planetHempObj.reduce(() => {
     setFilteredPlanets(planetHempObj);
   };
 
@@ -41,7 +41,9 @@ function Planets() {
       comparison,
       value,
     };
-    console.log(filterObj);
+
+    unsetLabelsColuns(labelsColuns.filter((label) => label !== filterObj.column));
+
     setNumericFiltersObj({
       filterByNumericValues: [...numericFiltersObj.filterByNumericValues, filterObj],
     });
@@ -85,11 +87,9 @@ function Planets() {
             value={ column }
             onChange={ (e) => setColumn(e.target.value) }
           >
-            <option value="population">population</option>
-            <option value="orbital_period">orbital_period</option>
-            <option value="diameter">diameter</option>
-            <option value="rotation_period">rotation_period</option>
-            <option value="surface_water">surface_water</option>
+            {labelsColuns.map((label, index) => (
+              <option key={ index } value={ label }>{ label }</option>
+            ))}
           </select>
         </label>
         <label htmlFor="comparison">
