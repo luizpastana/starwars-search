@@ -5,7 +5,9 @@ function Planets() {
   const {
     planets, planetsArray, labels,
     filteredPlanets, setFilteredPlanets,
-    setNumericFiltersObj, numericFiltersObj,
+    // setNumericFiltersObj, numericFiltersObj,
+    filterByNumericValues,
+    dispatch,
     labelsColuns, unsetLabelsColuns,
   } = useContext(PlanetsContext);
 
@@ -37,16 +39,21 @@ function Planets() {
 
   const makeFilterObj = () => {
     const filterObj = {
+      id: filterByNumericValues.length,
       column,
       comparison,
       value,
     };
 
     unsetLabelsColuns(labelsColuns.filter((label) => label !== filterObj.column));
-
-    setNumericFiltersObj({
-      filterByNumericValues: [...numericFiltersObj.filterByNumericValues, filterObj],
+    dispatch({
+      type: 'ADD_FILTER',
+      payload: filterObj,
     });
+
+    // setNumericFiltersObj({
+    //   filterByNumericValues: [...numericFiltersObj.filterByNumericValues, filterObj],
+    // });
 
     const filteredByComparison = filteredPlanets
       .filter((planet) => {
@@ -64,6 +71,19 @@ function Planets() {
     setFilteredPlanets(filteredByComparison);
   };
 
+  const deleteSpan = (indexDelete) => {
+    // Preciso de outra forma de controlar as "labels" que já foram usadas.
+    filterByNumericValues.forEach((item) => {
+      if (item.id === indexDelete) {
+        unsetLabelsColuns([...labelsColuns, item.column]);
+        dispatch({
+          type: 'REMOVE_FILTER',
+          payload: item.id,
+        });
+      }
+    });
+  };
+
   return (
     <>
       <input
@@ -74,8 +94,19 @@ function Planets() {
         value={ nameInput.name }
         onChange={ handleChange }
       />
-      {numericFiltersObj.filterByNumericValues.map((item) => (
-        <p key={ item.column }>{`${item.column} ${item.comparison} ${item.value}`}</p>
+      <button
+        type="button"
+        data-testid="button-remove-filters"
+        onClick={ () => dispatch({ type: 'RESETE' }) }
+      >
+        Remover Filtros
+      </button>
+      {filterByNumericValues.map((item, index) => (
+        item.id !== 0 && (
+          <span key={ index } data-testid="filter">
+            <p>{`${item.column} ${item.comparison} ${item.value}`}</p>
+            <button type="button" onClick={ () => deleteSpan(index) }>X</button>
+          </span>)
       ))}
       <form>
         <label htmlFor="column">

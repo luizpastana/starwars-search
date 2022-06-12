@@ -1,21 +1,14 @@
-import React, { useState } from 'react';
+import React, { useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
 import PlanetsContext from './PlanetsContext';
+import { reducer, initialState } from '../reducer/numericValuesReducer';
 import fetchPlanets from '../API';
 
 function PlanetsProvider({ children }) {
   const [planets, setPlanets] = useState([]);
   const [labels, setLabels] = useState([]);
   const [filteredPlanets, setFilteredPlanets] = useState([]);
-  const [numericFiltersObj, setNumericFiltersObj] = useState({
-    filterByNumericValues: [
-      {
-        column: '',
-        comparison: '',
-        value: '',
-      },
-    ],
-  });
+  const [filterByNumericValues, dispatch] = useReducer(reducer, initialState);
 
   const [labelsColuns, unsetLabelsColuns] = useState([
     'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
@@ -24,6 +17,7 @@ function PlanetsProvider({ children }) {
   const planetsArray = async () => {
     const result = await fetchPlanets();
     const label = Object.keys(result[0]);
+    console.log(result);
     setPlanets(result);
     setFilteredPlanets(result);
     setLabels(label);
@@ -35,15 +29,15 @@ function PlanetsProvider({ children }) {
     planetsArray,
     filteredPlanets,
     setFilteredPlanets,
-    numericFiltersObj,
-    setNumericFiltersObj,
+    filterByNumericValues,
+    dispatch,
     labelsColuns,
     unsetLabelsColuns,
   };
 
   return (
     <PlanetsContext.Provider value={ context }>
-      { children }
+      {children}
     </PlanetsContext.Provider>
   );
 }
