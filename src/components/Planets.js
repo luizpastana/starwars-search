@@ -5,26 +5,19 @@ function Planets() {
   const {
     planets, planetsArray, labels,
     filteredPlanets, setFilteredPlanets,
-    // setNumericFiltersObj, numericFiltersObj,
-    filterByNumericValues,
-    dispatch,
+    filterByNumericValues, dispatch,
     labelsColuns, unsetLabelsColuns,
   } = useContext(PlanetsContext);
 
   const [nameInput, setNameInput] = useState({ name: '' });
-
   const [column, setColumn] = useState('population');
   const [comparison, setComparison] = useState('maior que');
   const [value, setValue] = useState(0);
 
-  const nameAndNumericFilter = (planetHempObj) => {
-    setFilteredPlanets(planetHempObj);
-  };
-
   const handleChange = ({ target }) => {
     const { value: planetName } = target;
     setNameInput(planetName.toLowerCase());
-    nameAndNumericFilter(planets
+    setFilteredPlanets(planets
       .filter((planet) => planet.name
         .toLowerCase().includes(planetName.toLowerCase())));
   };
@@ -46,14 +39,11 @@ function Planets() {
     };
 
     unsetLabelsColuns(labelsColuns.filter((label) => label !== filterObj.column));
+
     dispatch({
       type: 'ADD_FILTER',
       payload: filterObj,
     });
-
-    // setNumericFiltersObj({
-    //   filterByNumericValues: [...numericFiltersObj.filterByNumericValues, filterObj],
-    // });
 
     const filteredByComparison = filteredPlanets
       .filter((planet) => {

@@ -8,16 +8,15 @@ function PlanetsProvider({ children }) {
   const [planets, setPlanets] = useState([]);
   const [labels, setLabels] = useState([]);
   const [filteredPlanets, setFilteredPlanets] = useState([]);
-  const [filterByNumericValues, dispatch] = useReducer(reducer, initialState);
-
   const [labelsColuns, unsetLabelsColuns] = useState([
     'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
   ]);
+  const [filterByNumericValues, dispatch] = useReducer(reducer, initialState);
 
   const planetsArray = async () => {
     const result = await fetchPlanets();
     const label = Object.keys(result[0]);
-    console.log(result);
+    console.log(label);
     setPlanets(result);
     setFilteredPlanets(result);
     setLabels(label);
