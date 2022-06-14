@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
 
 function Planets() {
@@ -11,6 +11,7 @@ function Planets() {
 
   const [nameInput, setNameInput] = useState({ name: '' });
   const [column, setColumn] = useState('population');
+  const [orderLabel, setOrderLabel] = useState('');
   const [comparison, setComparison] = useState('maior que');
   const [value, setValue] = useState(0);
 
@@ -30,6 +31,41 @@ function Planets() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const renderFilteredPlanets = useCallback(() => {
+    const newList = filterByNumericValues
+      .reduce((acumulator, filter) => acumulator
+        .filter((planet) => {
+          switch (filter.comparison) {
+          case 'maior que':
+            return planet[filter.column] > Number(filter.value);
+          case 'menor que':
+            return planet[filter.column] < Number(filter.value);
+          case 'igual a':
+            return planet[filter.column] === filter.value;
+          default:
+            return true;
+          }
+        }), filteredPlanets);
+    // console.log(newList);
+    return (newList.map((planet) => (
+      <tr key={ planet.name }>
+        <td>{planet.name}</td>
+        <td>{planet.rotation_period}</td>
+        <td>{planet.orbital_period}</td>
+        <td>{planet.diameter}</td>
+        <td>{planet.climate}</td>
+        <td>{planet.gravity}</td>
+        <td>{planet.terrain}</td>
+        <td>{planet.surface_water}</td>
+        <td>{planet.population}</td>
+        <td>{planet.films}</td>
+        <td>{planet.created}</td>
+        <td>{planet.edited}</td>
+        <td>{planet.url}</td>
+      </tr>
+    )));
+  }, [filterByNumericValues, filteredPlanets]);
+
   const makeFilterObj = () => {
     const filterObj = {
       id: filterByNumericValues.length,
@@ -38,27 +74,15 @@ function Planets() {
       value,
     };
 
-    unsetLabelsColuns(labelsColuns.filter((label) => label !== filterObj.column));
+    unsetLabelsColuns(labelsColuns
+      .filter((label) => label !== filterObj.column));
 
     dispatch({
       type: 'ADD_FILTER',
       payload: filterObj,
     });
 
-    const filteredByComparison = filteredPlanets
-      .filter((planet) => {
-        switch (filterObj.comparison) {
-        case 'maior que':
-          return planet[filterObj.column] > Number(filterObj.value);
-        case 'menor que':
-          return planet[filterObj.column] < Number(filterObj.value);
-        case 'igual a':
-          return planet[filterObj.column] === filterObj.value;
-        default:
-          return planet;
-        }
-      });
-    setFilteredPlanets(filteredByComparison);
+    renderFilteredPlanets();
   };
 
   const deleteSpan = (indexDelete) => {
@@ -72,8 +96,12 @@ function Planets() {
         });
       }
     });
+    renderFilteredPlanets();
   };
 
+  const ascFiltersLabels = [
+    'population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water',
+  ];
   return (
     <>
       <input
@@ -109,7 +137,7 @@ function Planets() {
             onChange={ (e) => setColumn(e.target.value) }
           >
             {labelsColuns.map((label, index) => (
-              <option key={ index } value={ label }>{ label }</option>
+              <option key={ index } value={ label }>{label}</option>
             ))}
           </select>
         </label>
@@ -142,6 +170,39 @@ function Planets() {
           Filtrar
         </button>
       </form>
+      <form>
+        <label htmlFor="column-sort">
+          Order:
+          <select
+            name="column-sort"
+            id="coluns-sort"
+            data-testid="column-sort"
+            value={ orderLabel }
+            onChange={ (e) => setOrderLabel(e.target.value) }
+          >
+            {ascFiltersLabels.map((label, index) => (
+              <option key={ index } value={ label }>{label}</option>
+            ))}
+          </select>
+        </label>
+        <label htmlFor="asc">
+          Ascendente
+          <input
+            name="order"
+            id="asc"
+            type="radio"
+          />
+        </label>
+        <label htmlFor="dsc">
+          Descendente
+          <input
+            // onClick={ func }
+            name="order"
+            id="dsc"
+            type="radio"
+          />
+        </label>
+      </form>
       <table>
         <tr>
           {labels.filter((key) => key !== 'residents')
@@ -149,23 +210,7 @@ function Planets() {
               <th key={ planet }>{planet}</th>
             ))}
         </tr>
-        {filteredPlanets.map((planet) => (
-          <tr key={ planet.name }>
-            <td>{planet.name}</td>
-            <td>{planet.rotation_period}</td>
-            <td>{planet.orbital_period}</td>
-            <td>{planet.diameter}</td>
-            <td>{planet.climate}</td>
-            <td>{planet.gravity}</td>
-            <td>{planet.terrain}</td>
-            <td>{planet.surface_water}</td>
-            <td>{planet.population}</td>
-            <td>{planet.films}</td>
-            <td>{planet.created}</td>
-            <td>{planet.edited}</td>
-            <td>{planet.url}</td>
-          </tr>
-        ))}
+        {renderFilteredPlanets()}
       </table>
     </>
   );

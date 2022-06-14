@@ -16,7 +16,6 @@ function PlanetsProvider({ children }) {
   const planetsArray = async () => {
     const result = await fetchPlanets();
     const label = Object.keys(result[0]);
-    console.log(label);
     setPlanets(result);
     setFilteredPlanets(result);
     setLabels(label);
