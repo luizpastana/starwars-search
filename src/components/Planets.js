@@ -1,10 +1,11 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
+import RenderFilteredPlanets from '../reducer/RenderFilteredPlanets';
 
 function Planets() {
   const {
     planets, planetsArray, labels,
-    filteredPlanets, setFilteredPlanets,
+    setFilteredPlanets,
     filterByNumericValues, dispatch,
     labelsColuns, unsetLabelsColuns,
   } = useContext(PlanetsContext);
@@ -31,41 +32,6 @@ function Planets() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const renderFilteredPlanets = useCallback(() => {
-    const newList = filterByNumericValues
-      .reduce((acumulator, filter) => acumulator
-        .filter((planet) => {
-          switch (filter.comparison) {
-          case 'maior que':
-            return planet[filter.column] > Number(filter.value);
-          case 'menor que':
-            return planet[filter.column] < Number(filter.value);
-          case 'igual a':
-            return planet[filter.column] === filter.value;
-          default:
-            return true;
-          }
-        }), filteredPlanets);
-    // console.log(newList);
-    return (newList.map((planet) => (
-      <tr key={ planet.name }>
-        <td>{planet.name}</td>
-        <td>{planet.rotation_period}</td>
-        <td>{planet.orbital_period}</td>
-        <td>{planet.diameter}</td>
-        <td>{planet.climate}</td>
-        <td>{planet.gravity}</td>
-        <td>{planet.terrain}</td>
-        <td>{planet.surface_water}</td>
-        <td>{planet.population}</td>
-        <td>{planet.films}</td>
-        <td>{planet.created}</td>
-        <td>{planet.edited}</td>
-        <td>{planet.url}</td>
-      </tr>
-    )));
-  }, [filterByNumericValues, filteredPlanets]);
-
   const makeFilterObj = () => {
     const filterObj = {
       id: filterByNumericValues.length,
@@ -81,8 +47,6 @@ function Planets() {
       type: 'ADD_FILTER',
       payload: filterObj,
     });
-
-    renderFilteredPlanets();
   };
 
   const deleteSpan = (indexDelete) => {
@@ -96,7 +60,6 @@ function Planets() {
         });
       }
     });
-    renderFilteredPlanets();
   };
 
   const ascFiltersLabels = [
@@ -210,7 +173,7 @@ function Planets() {
               <th key={ planet }>{planet}</th>
             ))}
         </tr>
-        {renderFilteredPlanets()}
+        {RenderFilteredPlanets()}
       </table>
     </>
   );
