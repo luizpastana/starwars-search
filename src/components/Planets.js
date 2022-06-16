@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
-import RenderFilteredPlanets from '../reducer/RenderFilteredPlanets';
+import RenderFilteredPlanets from '../helpers/RenderFilteredPlanets';
 
 function Planets() {
   const {
@@ -167,13 +167,17 @@ function Planets() {
         </label>
       </form>
       <table>
-        <tr>
-          {labels.filter((key) => key !== 'residents')
-            .map((planet) => (
-              <th key={ planet }>{planet}</th>
-            ))}
-        </tr>
-        {RenderFilteredPlanets()}
+        <thead>
+          <tr>
+            {labels.filter((key) => key !== 'residents')
+              .map((planet) => (
+                <th key={ planet }>{planet}</th>
+              ))}
+          </tr>
+        </thead>
+        <tbody>
+          {RenderFilteredPlanets()}
+        </tbody>
       </table>
     </>
   );
