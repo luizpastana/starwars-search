@@ -2,16 +2,16 @@ import React, { useContext } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
 
 const RenderFilteredPlanets = () => {
-  const { filterByNumericValues, filteredPlanets, planets } = useContext(PlanetsContext);
-  const teste = planets || [];
+  const { filterByNumericValues, filteredPlanets } = useContext(PlanetsContext);
+  // const teste = planets || [];
 
-  const sort = teste.sort((a, b) => {
-    const one = -1;
-    if (Number(a.diameter) < Number(b.diameter)) { return one; }
-    if (Number(a.diameter) > Number(b.diameter)) { return 1; }
-    return 0;
-  });
-  console.log(sort);
+  // const sort = teste.sort((a, b) => {
+  //   const one = -1;
+  //   if (Number(a.diameter) < Number(b.diameter)) { return one; }
+  //   if (Number(a.diameter) > Number(b.diameter)) { return 1; }
+  //   return 0;
+  // });
+  // console.log(sort);
 
   const newList = filterByNumericValues
     .reduce((acumulator, filter) => acumulator
